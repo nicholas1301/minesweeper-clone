@@ -1,0 +1,95 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: "Courier New", Courier, monospace;
+}
+
+body {
+  background-color: rgb(20, 20, 20);
+  color: white;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 200px;
+}
+
+form span {
+  display: flex;
+  justify-content: space-between;
+}
+
+.board {
+  /* width: 700px;
+  height: 700px; */
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0px;
+  margin-bottom: 200px;
+}
+
+.board div {
+  background-color: #bababa;
+  border: outset;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.board .zero {
+  border: solid 1px grey;
+}
+
+.board .one {
+  border: solid 1px grey;
+  color: blue;
+}
+
+.board .two {
+  border: solid 1px grey;
+  color: #00aa00;
+}
+
+.board .three {
+  border: solid 1px grey;
+  color: red;
+}
+
+.board .four {
+  border: solid 1px grey;
+  color: rgb(0, 0, 138);
+}
+
+.board .five {
+  border: solid 1px grey;
+  color: #892518;
+}
+
+.board .six {
+  border: solid 1px grey;
+  color: #33a3a3;
+}
+
+.board .bomb {
+  border: solid 1px grey;
+  background-image: url("../imgs/bomb.png");
+  background-size: cover;
+}
+
+.board .flag {
+  background-image: url("../imgs/flag.png");
+  background-size: cover;
+}
