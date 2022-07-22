@@ -1,4 +1,4 @@
-import Game from "./controllers/board.controller.js";
+import Game from "./controllers/game.controller.js";
 
 document.querySelector("button").addEventListener("click", (event) => {
   event.preventDefault();

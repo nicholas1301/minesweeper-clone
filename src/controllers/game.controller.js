@@ -30,6 +30,7 @@ export default class Game {
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
         const cell = document.createElement("div");
+        cell.addEventListener("contextmenu", (e) => this.toggleFlag(e));
         cell.id = row + "-" + col;
         switch (this.board[row][col]) {
           case "x":
@@ -70,8 +71,7 @@ export default class Game {
             cell.classList.add("seven");
             break;
           default:
-            cell.addEventListener("contextmenu", Game.toggleFlag);
-            cell.addEventListener("click", Game.guess);
+            cell.addEventListener("click", (e) => this.guess(e));
         }
         grid.append(cell);
       }
@@ -120,23 +120,106 @@ export default class Game {
     return adjacentSquares.filter((square) => square === "x").length;
   }
 
-  static toggleFlag(event) {
+  toggleFlag(event) {
     event.preventDefault();
-    event.target.classList.toggle("flag");
+    const coords = event.target.id.split("-");
+    const x = +coords[0];
+    const y = +coords[1];
+    if (this.board[x][y] !== "o" && this.board[x][y] !== "f") return;
+    if (this.board[x][y] === "f") this.board[x][y] = "o";
+    else this.board[x][y] = "f";
+    this.renderGrid();
   }
 
-  static guess(event) {
-    if (event.target.classList.contains("flag")) return;
+  guess(event) {
     const coords = event.target.id.split("-");
-    // Game.board[(coords[0], coords[1])] = Game.answer[(coords[0], coords[1])];
+    const x = +coords[0];
+    const y = +coords[1];
+    if (this.board[x][y] === "f") return;
+    this.open(x, y);
+    this.renderGrid();
   }
-  // [[o,2,x,2,o,o,o,o,o],
-  // [o,2,x,2,1,1,o,o,o],
-  // [o,1,1,2,x,2,1,o,o],
-  // [o,o,o,1,2,x,1,o,o],
-  // [o,o,o,o,1,1,1,o,o],
-  // [o,o,o,o,o,o,o,o,o],
-  // [o,o,o,o,o,o,o,o,o],
-  // [o,o,o,o,o,o,o,o,o],
-  // [o,o,o,o,o,o,o,o,o]]
+
+  open(row, col) {
+    if (this.answer[row][col] === "0") {
+      // breadth first search
+
+      const queue = [];
+      queue.push([row, col]);
+      while (queue.length > 0) {
+        const [nextRow, nextCol] = queue.shift();
+        this.board[nextRow][nextCol] = this.answer[nextRow][nextCol];
+        if (this.board[nextRow][nextCol] !== "0") continue;
+        const candidates = [
+          [nextRow - 1, nextCol - 1],
+          [nextRow - 1, nextCol],
+          [nextRow - 1, nextCol + 1],
+          [nextRow, nextCol - 1],
+          [nextRow, nextCol + 1],
+          [nextRow + 1, nextCol - 1],
+          [nextRow + 1, nextCol],
+          [nextRow + 1, nextCol + 1],
+        ];
+        for (const coords of candidates) {
+          const x = coords[0];
+          const y = coords[1];
+          if (
+            0 <= x &&
+            x < this.height &&
+            0 <= y &&
+            y < this.width && // [x, y] exists in the board
+            this.board[x][y] === "o" && // [x, y] hasn't been explored
+            this.answer[x][y] !== "x" // [x, y] doesn't have a bomb
+          ) {
+            queue.push([x, y]);
+          }
+        }
+      }
+    } else {
+      this.board[row][col] = this.answer[row][col];
+    }
+  }
+
+  // one event: a click on a 0
+  // should update this.board
+  // one call of renderGrid()
+
+  // recursively calling click: exceeds maximum call stack size but is somehow working??
+  // openAllAdjacent(row, col) {
+  //   const prevRow = this.board[row - 1];
+  //   const nextRow = this.board[row + 1];
+  //   const prevCol = this.board[row][col - 1];
+  //   const nextCol = this.board[row][col + 1];
+
+  //   if (prevCol !== undefined && this.board[row][col - 1] === "o") {
+  //     document.getElementById(`${row}-${col - 1}`).click();
+  //   }
+  //   if (nextCol !== undefined && this.board[row][col + 1] === "o") {
+  //     document.getElementById(`${row}-${col + 1}`).click();
+  //   }
+
+  //   if (prevRow !== undefined) {
+  //     if (this.board[row - 1][col] === "o") {
+  //       document.getElementById(`${row - 1}-${col}`).click();
+  //     }
+  //     if (prevCol !== undefined && this.board[row - 1][col - 1] === "o") {
+  //       document.getElementById(`${row - 1}-${col - 1}`).click();
+  //     }
+  //     if (nextCol !== undefined && this.board[row - 1][col + 1] === "o") {
+  //       document.getElementById(`${row - 1}-${col + 1}`).click();
+  //     }
+  //   }
+
+  //   if (nextRow !== undefined) {
+  //     if (this.board[row + 1][col] === "o") {
+  //       document.getElementById(`${row + 1}-${col}`).click();
+  //     }
+  //     if (prevCol !== undefined && this.board[row + 1][col - 1] === "o") {
+  //       document.getElementById(`${row + 1}-${col - 1}`).click();
+  //     }
+  //     if (nextCol !== undefined && this.board[row + 1][col + 1] === "o") {
+  //       document.getElementById(`${row + 1}-${col + 1}`).click();
+  //     }
+  //   }
+  // }
 }
