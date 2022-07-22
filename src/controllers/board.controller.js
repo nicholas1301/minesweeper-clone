@@ -1,22 +1,13 @@
-export default class Board {
-  static setGridDimensions(event) {
-    event.preventDefault();
-    const difficulty = document.querySelector(
-      'input[name="difficulty"]:checked'
-    ).value;
-    let width, height;
-    if (difficulty === "easy") {
-      width = 9;
-      height = 9;
-    } else if (difficulty === "medium") {
-      width = 16;
-      height = 16;
-    } else if (difficulty === "hard") {
-      width = 30;
-      height = 16;
-    }
-    const board = Board.makeNewBoard(width, height);
-    Board.renderGrid(board);
+export default class Game {
+  // static board = ;
+
+  constructor(width, height, bombs) {
+    this.width = width;
+    this.height = height;
+    this.board = Game.makeNewBoard(width, height);
+
+    // should not be set on the constructor, only on first guess:
+    this.answer = Game.createAnswerBoard(bombs, width, height);
   }
 
   static makeNewBoard(width, height) {
@@ -31,18 +22,16 @@ export default class Board {
     return board;
   }
 
-  static renderGrid(board) {
+  renderGrid() {
     const grid = document.querySelector(".board");
     grid.innerHTML = "";
-    const height = board.length;
-    const width = board[0].length;
-    grid.style.gridTemplateColumns = `repeat(${width}, 1fr)`;
+    grid.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
 
-    for (let row = 0; row < height; row++) {
-      for (let col = 0; col < width; col++) {
+    for (let row = 0; row < this.height; row++) {
+      for (let col = 0; col < this.width; col++) {
         const cell = document.createElement("div");
         cell.id = row + "-" + col;
-        switch (board[row][col]) {
+        switch (this.board[row][col]) {
           case "x":
             cell.classList.add("bomb");
             break;
@@ -76,16 +65,71 @@ export default class Board {
             cell.innerText = "6";
             cell.classList.add("six");
             break;
+          case "7":
+            cell.innerText = "7";
+            cell.classList.add("seven");
+            break;
+          default:
+            cell.addEventListener("contextmenu", Game.toggleFlag);
+            cell.addEventListener("click", Game.guess);
         }
         grid.append(cell);
       }
     }
   }
 
-  static createAnswerBoard() {
-    return;
+  // should be called with the first click on the board
+  // the clicked cell should be a guaranteed 0, i.e. bombs can't be placed on any adjacent squares
+  static createAnswerBoard(numBombs, width, height) {
+    let answerBoard = Game.makeNewBoard(width, height);
+    while (numBombs) {
+      const x = Math.floor(Math.random() * width);
+      const y = Math.floor(Math.random() * height);
+      if (answerBoard[y][x] === "x") continue;
+      answerBoard[y][x] = "x";
+      numBombs--;
+    }
+    answerBoard = Game.populateNumbers(answerBoard);
+    return answerBoard;
   }
 
+  static populateNumbers(board) {
+    const height = board.length;
+    const width = board[0].length;
+    for (let row = 0; row < height; row++) {
+      for (let col = 0; col < width; col++) {
+        if (board[row][col] === "x") continue;
+        const numAdjacentBombs = Game.getAdjacentBombs(row, col, board);
+        board[row][col] = numAdjacentBombs.toString();
+      }
+    }
+    return board;
+  }
+
+  static getAdjacentBombs(row, col, board) {
+    const adjacentSquares = [
+      board[row - 1]?.[col - 1],
+      board[row - 1]?.[col],
+      board[row - 1]?.[col + 1],
+      board[row][col - 1],
+      board[row][col + 1],
+      board[row + 1]?.[col - 1],
+      board[row + 1]?.[col],
+      board[row + 1]?.[col + 1],
+    ];
+    return adjacentSquares.filter((square) => square === "x").length;
+  }
+
+  static toggleFlag(event) {
+    event.preventDefault();
+    event.target.classList.toggle("flag");
+  }
+
+  static guess(event) {
+    if (event.target.classList.contains("flag")) return;
+    const coords = event.target.id.split("-");
+    // Game.board[(coords[0], coords[1])] = Game.answer[(coords[0], coords[1])];
+  }
   // [[o,2,x,2,o,o,o,o,o],
   // [o,2,x,2,1,1,o,o,o],
   // [o,1,1,2,x,2,1,o,o],

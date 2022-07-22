@@ -83,6 +83,11 @@ form span {
   color: #33a3a3;
 }
 
+.board .seven {
+  border: solid 1px grey;
+  color: grey;
+}
+
 .board .bomb {
   border: solid 1px grey;
   background-image: url("../imgs/bomb.png");

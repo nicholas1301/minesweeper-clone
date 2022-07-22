@@ -1,7 +1,26 @@
-import Board from "./controllers/board.controller.js";
+import Game from "./controllers/board.controller.js";
 
 document.querySelector("button").addEventListener("click", (event) => {
-  Board.setGridDimensions(event);
+  event.preventDefault();
+  const difficulty = document.querySelector(
+    'input[name="difficulty"]:checked'
+  ).value;
+  let width, height, bombs;
+  if (difficulty === "easy") {
+    width = 9;
+    height = 9;
+    bombs = 10;
+  } else if (difficulty === "medium") {
+    width = 16;
+    height = 16;
+    bombs = 40;
+  } else if (difficulty === "hard") {
+    width = 30;
+    height = 16;
+    bombs = 99;
+  }
+  const game = new Game(width, height, bombs);
+  game.renderGrid();
   hideForm();
 });
 
