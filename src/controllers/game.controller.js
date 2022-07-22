@@ -1,6 +1,9 @@
-export default class Game {
-  // static board = ;
+// TO-DO:
+// victory state
+// click on a number to reveal adjacent squares with no bombs
+// safe first click
 
+export default class Game {
   constructor(width, height, bombs) {
     this.width = width;
     this.height = height;
@@ -22,7 +25,7 @@ export default class Game {
     return board;
   }
 
-  renderGrid() {
+  renderGrid(gameOn = true) {
     const grid = document.querySelector(".board");
     grid.innerHTML = "";
     grid.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
@@ -30,11 +33,15 @@ export default class Game {
     for (let row = 0; row < this.height; row++) {
       for (let col = 0; col < this.width; col++) {
         const cell = document.createElement("div");
-        cell.addEventListener("contextmenu", (e) => this.toggleFlag(e));
+        if (gameOn)
+          cell.addEventListener("contextmenu", (e) => this.toggleFlag(e));
         cell.id = row + "-" + col;
         switch (this.board[row][col]) {
           case "x":
             cell.classList.add("bomb");
+            break;
+          case "X":
+            cell.classList.add("exploded");
             break;
           case "f":
             cell.classList.add("flag");
@@ -71,7 +78,7 @@ export default class Game {
             cell.classList.add("seven");
             break;
           default:
-            cell.addEventListener("click", (e) => this.guess(e));
+            if (gameOn) cell.addEventListener("click", (e) => this.guess(e));
         }
         grid.append(cell);
       }
@@ -136,8 +143,30 @@ export default class Game {
     const x = +coords[0];
     const y = +coords[1];
     if (this.board[x][y] === "f") return;
+    if (this.answer[x][y] === "x") {
+      this.gameOver(event);
+      return;
+    }
     this.open(x, y);
     this.renderGrid();
+  }
+
+  gameOver(event) {
+    this.showAllBombs();
+    const coords = event.target.id.split("-");
+    const x = +coords[0];
+    const y = +coords[1];
+    this.board[x][y] = "X";
+    this.renderGrid(false);
+  }
+
+  showAllBombs() {
+    for (let i = 0; i < this.height; i++) {
+      for (let j = 0; j < this.width; j++) {
+        if (this.answer[i][j] === "x" && this.board[i][j] !== "f")
+          this.board[i][j] = "x";
+      }
+    }
   }
 
   open(row, col) {
@@ -180,11 +209,7 @@ export default class Game {
     }
   }
 
-  // one event: a click on a 0
-  // should update this.board
-  // one call of renderGrid()
-
-  // recursively calling click: exceeds maximum call stack size but is somehow working??
+  // recursively calling click: exceeds maximum call stack size but still works somehow
   // openAllAdjacent(row, col) {
   //   const prevRow = this.board[row - 1];
   //   const nextRow = this.board[row + 1];

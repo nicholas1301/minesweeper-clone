@@ -94,6 +94,13 @@ form span {
   background-size: cover;
 }
 
+.board .exploded {
+  border: solid 1px grey;
+  background-color: red;
+  background-image: url("../imgs/bomb.png");
+  background-size: cover;
+}
+
 .board .flag {
   background-image: url("../imgs/flag.png");
   background-size: cover;
