@@ -52,30 +52,37 @@ export default class Game {
           case "1":
             cell.innerText = "1";
             cell.classList.add("one");
+            cell.addEventListener("click", (e) => this.openAdjacent(e));
             break;
           case "2":
             cell.innerText = "2";
             cell.classList.add("two");
+            cell.addEventListener("click", (e) => this.openAdjacent(e));
             break;
           case "3":
             cell.innerText = "3";
             cell.classList.add("three");
+            cell.addEventListener("click", (e) => this.openAdjacent(e));
             break;
           case "4":
             cell.innerText = "4";
             cell.classList.add("four");
+            cell.addEventListener("click", (e) => this.openAdjacent(e));
             break;
           case "5":
             cell.innerText = "5";
             cell.classList.add("five");
+            cell.addEventListener("click", (e) => this.openAdjacent(e));
             break;
           case "6":
             cell.innerText = "6";
             cell.classList.add("six");
+            cell.addEventListener("click", (e) => this.openAdjacent(e));
             break;
           case "7":
             cell.innerText = "7";
             cell.classList.add("seven");
+            cell.addEventListener("click", (e) => this.openAdjacent(e));
             break;
           default:
             if (gameOn) cell.addEventListener("click", (e) => this.guess(e));
@@ -206,6 +213,33 @@ export default class Game {
       }
     } else {
       this.board[row][col] = this.answer[row][col];
+    }
+  }
+
+  openAdjacent(event) {
+    const num = +event.target.innerText;
+    const [x, y] = event.target.id.split("-").map((x) => +x);
+    // verify if the number of adjacent flags is equal to num
+    const adjacentCoords = [
+      [x - 1, y - 1],
+      [x - 1, y],
+      [x - 1, y + 1],
+      [x, y + 1],
+      [x, y - 1],
+      [x + 1, y - 1],
+      [x + 1, y],
+      [x + 1, y + 1],
+    ];
+    const numAdjacentFlags = adjacentCoords.filter(
+      ([row, col]) => this.board[row]?.[col] === "f"
+    ).length;
+    if (numAdjacentFlags === num) {
+      const coordsToClick = adjacentCoords.filter(
+        ([row, col]) => this.board[row][col] === "o"
+      );
+      coordsToClick.forEach(([row, col]) =>
+        document.getElementById(row + "-" + col).click()
+      );
     }
   }
 

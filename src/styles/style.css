@@ -56,36 +56,43 @@ form span {
 .board .one {
   border: solid 1px grey;
   color: blue;
+  cursor: default;
 }
 
 .board .two {
   border: solid 1px grey;
   color: #00aa00;
+  cursor: default;
 }
 
 .board .three {
   border: solid 1px grey;
   color: red;
+  cursor: default;
 }
 
 .board .four {
   border: solid 1px grey;
   color: rgb(0, 0, 138);
+  cursor: default;
 }
 
 .board .five {
   border: solid 1px grey;
   color: #892518;
+  cursor: default;
 }
 
 .board .six {
   border: solid 1px grey;
   color: #33a3a3;
+  cursor: default;
 }
 
 .board .seven {
   border: solid 1px grey;
   color: grey;
+  cursor: default;
 }
 
 .board .bomb {
