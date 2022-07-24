@@ -1,3 +1,0 @@
-easy: 9x9, 10 mines
-intermediate/medium: 16x16, 40 mines
-expert: 16x30, 99 mines
