@@ -9,15 +9,45 @@
     <title>Minesweeper</title>
   </head>
   <body>
-    <form class="input-container">
+    <h1>Minesweeper</h1>
+    <form action="">
       <label for="difficulty">Difficulty:</label>
-      <span>Easy <input type="radio" name="difficulty" value="easy" /></span>
-      <span>Medium<input type="radio" name="difficulty" value="medium" /></span>
-      <span>Hard<input type="radio" name="difficulty" value="hard" /></span>
-      <button>Go</button>
+      <div class="input-container">
+        <div>
+          <span
+            >Easy <input type="radio" name="difficulty" value="easy"
+          /></span>
+          <p>9x9 grid, 10 bombs</p>
+        </div>
+        <div>
+          <span
+            >Medium<input type="radio" name="difficulty" value="medium"
+          /></span>
+          <p>16x16 grid, 40 bombs</p>
+        </div>
+        <div>
+          <span>Hard<input type="radio" name="difficulty" value="hard" /></span>
+          <p>16x30 grid, 99 bombs</p>
+        </div>
+      </div>
+      <button class="start-btn">Go</button>
     </form>
 
     <div class="board"></div>
+
+    <div class="victory-msg-container">
+      <div class="msg">
+        <p>You won!</p>
+        <button class="play-again-btn">Play again</button>
+      </div>
+    </div>
+
+    <div class="defeat-msg-container">
+      <div class="msg">
+        <p>You lost!</p>
+        <button class="play-again-btn">Play again</button>
+      </div>
+    </div>
 
     <script type="module" src="./src/script.js"></script>
   </body>

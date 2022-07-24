@@ -1,7 +1,3 @@
-// TO-DO:
-// victory state
-// safe first click
-
 export default class Game {
   constructor(width, height, bombs) {
     this.width = width;
@@ -90,8 +86,6 @@ export default class Game {
     }
   }
 
-  // should be called with the first click on the board
-  // the clicked cell should be a guaranteed 0, i.e. bombs can't be placed on any adjacent squares
   static createAnswerBoard(numBombs, width, height, clickCoords) {
     const [clickX, clickY] = clickCoords;
     const adjacent = [
@@ -168,7 +162,8 @@ export default class Game {
       win = this.checkVictory();
     }
     this.renderGrid(!win);
-    if (win) alert("you won!");
+    if (win)
+      document.querySelector(".victory-msg-container").style.display = "block";
   }
 
   checkVictory() {
@@ -206,7 +201,8 @@ export default class Game {
       win = this.checkVictory();
     }
     this.renderGrid(!win);
-    if (win) alert("you won!");
+    if (win)
+      document.querySelector(".victory-msg-container").style.display = "block";
   }
 
   gameOver(event) {
@@ -216,6 +212,7 @@ export default class Game {
     const y = +coords[1];
     this.board[x][y] = "X";
     this.renderGrid(false);
+    document.querySelector(".defeat-msg-container").style.display = "block";
   }
 
   showAllBombs() {
@@ -293,43 +290,4 @@ export default class Game {
       );
     }
   }
-
-  // recursively calling click: exceeds maximum call stack size but still works somehow
-  // openAllAdjacent(row, col) {
-  //   const prevRow = this.board[row - 1];
-  //   const nextRow = this.board[row + 1];
-  //   const prevCol = this.board[row][col - 1];
-  //   const nextCol = this.board[row][col + 1];
-
-  //   if (prevCol !== undefined && this.board[row][col - 1] === "o") {
-  //     document.getElementById(`${row}-${col - 1}`).click();
-  //   }
-  //   if (nextCol !== undefined && this.board[row][col + 1] === "o") {
-  //     document.getElementById(`${row}-${col + 1}`).click();
-  //   }
-
-  //   if (prevRow !== undefined) {
-  //     if (this.board[row - 1][col] === "o") {
-  //       document.getElementById(`${row - 1}-${col}`).click();
-  //     }
-  //     if (prevCol !== undefined && this.board[row - 1][col - 1] === "o") {
-  //       document.getElementById(`${row - 1}-${col - 1}`).click();
-  //     }
-  //     if (nextCol !== undefined && this.board[row - 1][col + 1] === "o") {
-  //       document.getElementById(`${row - 1}-${col + 1}`).click();
-  //     }
-  //   }
-
-  //   if (nextRow !== undefined) {
-  //     if (this.board[row + 1][col] === "o") {
-  //       document.getElementById(`${row + 1}-${col}`).click();
-  //     }
-  //     if (prevCol !== undefined && this.board[row + 1][col - 1] === "o") {
-  //       document.getElementById(`${row + 1}-${col - 1}`).click();
-  //     }
-  //     if (nextCol !== undefined && this.board[row + 1][col + 1] === "o") {
-  //       document.getElementById(`${row + 1}-${col + 1}`).click();
-  //     }
-  //   }
-  // }
 }

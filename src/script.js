@@ -24,9 +24,24 @@ document.querySelector("button").addEventListener("click", (event) => {
   hideForm();
 });
 
+document
+  .querySelectorAll(".play-again-btn")
+  .forEach((node) => node.addEventListener("click", playAgain));
+
 function hideForm() {
+  const h1 = document.querySelector("h1");
+  h1.style.display = "none";
   const form = document.querySelector("form");
   form.style.display = "none";
-  const board = document.querySelector(".board");
-  board.style.marginTop = "100px";
+}
+
+function playAgain(event) {
+  const grid = document.querySelector(".board");
+  grid.innerHTML = "";
+  const h1 = document.querySelector("h1");
+  h1.style.display = "block";
+  const form = document.querySelector("form");
+  form.style.display = "flex";
+  // hide target div
+  event.target.parentNode.parentNode.style.display = "none";
 }

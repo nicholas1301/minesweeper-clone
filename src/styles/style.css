@@ -3,7 +3,7 @@
 }
 
 html {
-  font-family: "Courier New", Courier, monospace;
+  font-family: "Helvetica", sans-serif;
 }
 
 body {
@@ -12,20 +12,56 @@ body {
   margin: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  gap: 10px;
+}
+
+h1 {
+  margin-top: 50px;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  height: 200px;
+  align-items: center;
+  gap: 20px;
 }
 
-form span {
+label {
+  position: relative;
+  left: -10px;
+}
+
+.input-container {
+  display: flex;
+  gap: 40px;
+  /* flex-direction: column; */
+  /* justify-content: space-evenly; */
+  height: 70px;
+  width: 300px;
+}
+
+.input-container span {
   display: flex;
   justify-content: space-between;
+}
+
+input {
+  cursor: pointer;
+}
+
+p {
+  font-size: 0.8rem;
+}
+
+button {
+  cursor: pointer;
+}
+
+.start-btn {
+  padding: 0.5rem 1rem;
+  position: relative;
+  left: -10px;
 }
 
 /* board dimensions: height (px) x width (px)
@@ -34,12 +70,10 @@ medium: 384 x 384
 hard: 384 x 720 */
 
 .board {
-  /* width: 700px;
-  height: 700px; */
+  margin-top: 100px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0px;
-  margin-bottom: 200px;
 }
 
 .board div {
@@ -116,4 +150,18 @@ hard: 384 x 720 */
 .board .flag {
   background-image: url("../imgs/flag.png");
   background-size: cover;
+}
+
+.victory-msg-container {
+  display: none;
+}
+
+.defeat-msg-container {
+  display: none;
+}
+
+.msg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
