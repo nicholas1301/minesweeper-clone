@@ -28,6 +28,11 @@ form span {
   justify-content: space-between;
 }
 
+/* board dimensions: height (px) x width (px)
+easy: 216 x 216
+medium: 384 x 384
+hard: 384 x 720 */
+
 .board {
   /* width: 700px;
   height: 700px; */

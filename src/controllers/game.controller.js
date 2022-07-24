@@ -1,6 +1,5 @@
 // TO-DO:
 // victory state
-// click on a number to reveal adjacent squares with no bombs
 // safe first click
 
 export default class Game {
@@ -8,9 +7,8 @@ export default class Game {
     this.width = width;
     this.height = height;
     this.board = Game.makeNewBoard(width, height);
-
-    // should not be set on the constructor, only on first guess:
-    this.answer = Game.createAnswerBoard(bombs, width, height);
+    this.flags = 0;
+    this.bombs = bombs;
   }
 
   static makeNewBoard(width, height) {
@@ -94,12 +92,30 @@ export default class Game {
 
   // should be called with the first click on the board
   // the clicked cell should be a guaranteed 0, i.e. bombs can't be placed on any adjacent squares
-  static createAnswerBoard(numBombs, width, height) {
+  static createAnswerBoard(numBombs, width, height, clickCoords) {
+    const [clickX, clickY] = clickCoords;
+    const adjacent = [
+      [clickX - 1, clickY - 1],
+      [clickX - 1, clickY],
+      [clickX - 1, clickY + 1],
+      [clickX, clickY - 1],
+      [clickX, clickY],
+      [clickX, clickY + 1],
+      [clickX + 1, clickY - 1],
+      [clickX + 1, clickY],
+      [clickX + 1, clickY + 1],
+    ];
     let answerBoard = Game.makeNewBoard(width, height);
     while (numBombs) {
       const x = Math.floor(Math.random() * width);
       const y = Math.floor(Math.random() * height);
       if (answerBoard[y][x] === "x") continue;
+      if (
+        adjacent.some(
+          (coords) => JSON.stringify(coords) === JSON.stringify([y, x])
+        )
+      )
+        continue;
       answerBoard[y][x] = "x";
       numBombs--;
     }
@@ -140,22 +156,57 @@ export default class Game {
     const x = +coords[0];
     const y = +coords[1];
     if (this.board[x][y] !== "o" && this.board[x][y] !== "f") return;
-    if (this.board[x][y] === "f") this.board[x][y] = "o";
-    else this.board[x][y] = "f";
-    this.renderGrid();
+    if (this.board[x][y] === "f") {
+      this.board[x][y] = "o";
+      this.flags--;
+    } else {
+      this.board[x][y] = "f";
+      this.flags++;
+    }
+    let win = false;
+    if (this.flags === this.bombs) {
+      win = this.checkVictory();
+    }
+    this.renderGrid(!win);
+    if (win) alert("you won!");
+  }
+
+  checkVictory() {
+    for (let i = 0; i < this.height; i++) {
+      for (let j = 0; j < this.width; j++) {
+        if (this.answer[i][j] !== "x" && this.board[i][j] !== this.answer[i][j])
+          return false;
+        if (this.answer[i][j] === "x" && this.board[i][j] !== "f") return false;
+      }
+    }
+    return true;
   }
 
   guess(event) {
     const coords = event.target.id.split("-");
     const x = +coords[0];
     const y = +coords[1];
+
+    if (!this.answer) {
+      this.answer = Game.createAnswerBoard(
+        this.bombs,
+        this.width,
+        this.height,
+        [x, y]
+      );
+    }
     if (this.board[x][y] === "f") return;
     if (this.answer[x][y] === "x") {
       this.gameOver(event);
       return;
     }
     this.open(x, y);
-    this.renderGrid();
+    let win = false;
+    if (this.flags === this.bombs) {
+      win = this.checkVictory();
+    }
+    this.renderGrid(!win);
+    if (win) alert("you won!");
   }
 
   gameOver(event) {
@@ -235,7 +286,7 @@ export default class Game {
     ).length;
     if (numAdjacentFlags === num) {
       const coordsToClick = adjacentCoords.filter(
-        ([row, col]) => this.board[row][col] === "o"
+        ([row, col]) => this.board[row]?.[col] === "o"
       );
       coordsToClick.forEach(([row, col]) =>
         document.getElementById(row + "-" + col).click()
