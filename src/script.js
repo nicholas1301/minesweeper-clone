@@ -15,8 +15,8 @@ document.querySelector("button").addEventListener("click", (event) => {
     height = 16;
     bombs = 40;
   } else if (difficulty === "hard") {
-    width = 30;
-    height = 16;
+    width = 16;
+    height = 30;
     bombs = 99;
   }
   const game = new Game(width, height, bombs);

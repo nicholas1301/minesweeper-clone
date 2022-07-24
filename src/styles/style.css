@@ -69,11 +69,15 @@ easy: 216 x 216
 medium: 384 x 384
 hard: 384 x 720 */
 
+.board-container {
+  overflow: auto;
+}
+
 .board {
-  margin-top: 100px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 0px;
+  margin: 100px 30px 20px 30px;
 }
 
 .board div {
@@ -164,4 +168,5 @@ hard: 384 x 720 */
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 50px;
 }
