@@ -30,7 +30,43 @@
           <p>16x30 grid, 99 bombs</p>
         </div>
       </div>
-      <button class="start-btn">Go</button>
+      <div class="custom-container">
+        <span
+          >Custom
+          <input id="custom" type="radio" name="difficulty" value="custom"
+        /></span>
+        <div class="custom-settings" hidden>
+          <p>Board dimensions:</p>
+          <span>
+            Width: <input id="widthInput" type="number" name="width" min="1"
+          /></span>
+          <span>
+            Height: <input id="heightInput" type="number" name="height" min="1"
+          /></span>
+          <p class="warningWidth yellow" hidden>
+            For mobile devices, width <= 16 is advised
+          </p>
+          <p class="warningArea red" hidden>
+            Warning: game may be slow if board is too big <br />
+            (area > 5000)
+          </p>
+          <div class="bomb-section" hidden>
+            <div class="bombs-label">
+              <p>Number of bombs:</p>
+              <p id="bombNumber"></p>
+            </div>
+            <input
+              type="range"
+              min="1"
+              max="100"
+              value="50"
+              class="slider"
+              id="bombsInput"
+            />
+          </div>
+        </div>
+      </div>
+      <button class="start-btn">Play</button>
     </form>
 
     <div class="board-container">

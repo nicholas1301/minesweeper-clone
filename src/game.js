@@ -181,7 +181,6 @@ export default class Game {
     const coords = event.target.id.split("-");
     const x = +coords[0];
     const y = +coords[1];
-
     if (!this.answer) {
       this.answer = Game.createAnswerBoard(
         this.bombs,
@@ -224,10 +223,20 @@ export default class Game {
     }
   }
 
+  // const candidates = [
+  //   [row - 1, col - 1],
+  //   [row - 1, col],
+  //   [row - 1, col + 1],
+  //   [row, col - 1],
+  //   [row, col + 1],
+  //   [row + 1, col - 1],
+  //   [row + 1, col],
+  //   [row + 1, col + 1],
+  // ];
+  // candidates.forEach((coords) => this.open(...coords));
   open(row, col) {
     if (this.answer[row][col] === "0") {
       // breadth first search
-
       const queue = [];
       queue.push([row, col]);
       while (queue.length > 0) {
@@ -252,8 +261,7 @@ export default class Game {
             x < this.height &&
             0 <= y &&
             y < this.width && // [x, y] exists in the board
-            this.board[x][y] === "o" && // [x, y] hasn't been explored
-            this.answer[x][y] !== "x" // [x, y] doesn't have a bomb
+            this.board[x][y] === "o" // [x, y] hasn't been explored
           ) {
             queue.push([x, y]);
           }
@@ -288,6 +296,45 @@ export default class Game {
       coordsToClick.forEach(([row, col]) =>
         document.getElementById(row + "-" + col).click()
       );
+    }
+  }
+
+  // recursively calling click: exceeds maximum call stack size but is somehow working??
+  openAllAdjacent(row, col) {
+    const prevRow = this.board[row - 1];
+    const nextRow = this.board[row + 1];
+    const prevCol = this.board[row][col - 1];
+    const nextCol = this.board[row][col + 1];
+
+    if (prevCol !== undefined && this.board[row][col - 1] === "o") {
+      document.getElementById(`${row}-${col - 1}`).click();
+    }
+    if (nextCol !== undefined && this.board[row][col + 1] === "o") {
+      document.getElementById(`${row}-${col + 1}`).click();
+    }
+
+    if (prevRow !== undefined) {
+      if (this.board[row - 1][col] === "o") {
+        document.getElementById(`${row - 1}-${col}`).click();
+      }
+      if (prevCol !== undefined && this.board[row - 1][col - 1] === "o") {
+        document.getElementById(`${row - 1}-${col - 1}`).click();
+      }
+      if (nextCol !== undefined && this.board[row - 1][col + 1] === "o") {
+        document.getElementById(`${row - 1}-${col + 1}`).click();
+      }
+    }
+
+    if (nextRow !== undefined) {
+      if (this.board[row + 1][col] === "o") {
+        document.getElementById(`${row + 1}-${col}`).click();
+      }
+      if (prevCol !== undefined && this.board[row + 1][col - 1] === "o") {
+        document.getElementById(`${row + 1}-${col - 1}`).click();
+      }
+      if (nextCol !== undefined && this.board[row + 1][col + 1] === "o") {
+        document.getElementById(`${row + 1}-${col + 1}`).click();
+      }
     }
   }
 }

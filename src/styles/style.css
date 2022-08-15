@@ -46,6 +46,39 @@ label {
   justify-content: space-between;
 }
 
+.custom-container {
+  width: 300px;
+}
+
+.custom-container input {
+  width: 20%;
+}
+
+.custom-settings p {
+  font-size: 1rem;
+}
+
+.custom-settings span {
+  font-size: 0.8rem;
+}
+
+.custom-settings .warningWidth {
+  font-size: 0.8rem;
+}
+
+.custom-settings .warningArea {
+  font-size: 0.8rem;
+}
+
+.bombs-label {
+  display: flex;
+  justify-content: space-between;
+}
+
+#bombsInput {
+  width: 100%;
+}
+
 input {
   cursor: pointer;
 }
@@ -169,4 +202,24 @@ hard: 384 x 720 */
   flex-direction: column;
   align-items: center;
   margin-bottom: 50px;
+}
+
+.red {
+  color: red;
+}
+
+.blue {
+  color: blue;
+}
+
+.green {
+  color: rgb(0, 190, 0);
+}
+
+.yellow {
+  color: yellow;
+}
+
+#bombNumber span {
+  margin-left: 1rem;
 }
