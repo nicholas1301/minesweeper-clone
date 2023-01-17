@@ -1,10 +1,10 @@
 import Game from "./game.js";
 
-document.querySelector("button").addEventListener("click", (event) => {
+document.querySelector("button")!.addEventListener("click", (event) => {
   event.preventDefault();
-  const difficulty = document.querySelector(
+  const difficulty = (document.querySelector(
     'input[name="difficulty"]:checked'
-  ).value;
+  )! as any).value;
   let width, height, bombs;
   if (difficulty === "easy") {
     width = 9;
@@ -19,9 +19,9 @@ document.querySelector("button").addEventListener("click", (event) => {
     height = 30;
     bombs = 99;
   } else if (difficulty === "custom") {
-    width = document.getElementById("widthInput").value;
-    height = document.getElementById("heightInput").value;
-    bombs = document.getElementById("bombsInput").value;
+    width = (document.getElementById("widthInput")! as any).value;
+    height = (document.getElementById("heightInput")! as any).value;
+    bombs = (document.getElementById("bombsInput")! as any).value;
   }
   const game = new Game(width, height, bombs);
   game.renderGrid();
@@ -33,18 +33,18 @@ document
   .forEach((node) => node.addEventListener("click", playAgain));
 
 function hideForm() {
-  const h1 = document.querySelector("h1");
+  const h1 = document.querySelector("h1")!;
   h1.style.display = "none";
-  const form = document.querySelector("form");
+  const form = document.querySelector("form")!;
   form.style.display = "none";
 }
 
-function playAgain(event) {
-  const grid = document.querySelector(".board");
+function playAgain(event: any) {
+  const grid = document.querySelector(".board")!;
   grid.innerHTML = "";
-  const h1 = document.querySelector("h1");
+  const h1 = document.querySelector("h1")!;
   h1.style.display = "block";
-  const form = document.querySelector("form");
+  const form = document.querySelector("form")!;
   form.style.display = "flex";
   // hide target div
   event.target.parentNode.parentNode.style.display = "none";
@@ -55,9 +55,9 @@ const inputs = document.getElementsByName("difficulty");
   node.addEventListener("input", handleDifficultySelection)
 );
 
-function handleDifficultySelection(event) {
-  const custom = document.getElementById("custom");
-  const settings = document.querySelector(".custom-settings");
+function handleDifficultySelection(event: any) {
+  const custom: any = document.getElementById("custom")!;
+  const settings: any = document.querySelector(".custom-settings")!;
   if (custom.checked) {
     settings.hidden = false;
   } else {
@@ -65,16 +65,16 @@ function handleDifficultySelection(event) {
   }
 }
 
-const widthInput = document.getElementById("widthInput");
-widthInput.addEventListener("input", handleDimensionsChange);
+const widthInput: any = document.getElementById("widthInput")!;
+widthInput?.addEventListener("input", handleDimensionsChange);
 
-const heightInput = document.getElementById("heightInput");
-heightInput.addEventListener("input", handleDimensionsChange);
+const heightInput: any = document.getElementById("heightInput")!;
+heightInput?.addEventListener("input", handleDimensionsChange);
 
-const slider = document.getElementById("bombsInput");
-slider.addEventListener("input", updateBombCount);
+const slider: any = document.getElementById("bombsInput")!;
+slider?.addEventListener("input", updateBombCount);
 
-function handleDimensionsChange(event) {
+function handleDimensionsChange(event: any) {
   const MAX_AREA = 5000;
   const EASY_DENSITY = 10 / 81;
   const MED_DENSITY = 40 / 256;
@@ -83,15 +83,15 @@ function handleDimensionsChange(event) {
   const width = widthInput.value;
   const height = heightInput.value;
   const area = width * height;
-  const bombNumberTag = document.getElementById("bombNumber");
-  const bombSection = document.querySelector(".bomb-section");
-  const warningArea = document.querySelector(".warningArea");
+  const bombNumberTag: any = document.getElementById("bombNumber")!;
+  const bombSection: any = document.querySelector(".bomb-section")!;
+  const warningArea: any = document.querySelector(".warningArea")!;
   if (area > MAX_AREA) {
     warningArea.hidden = false;
   } else {
     warningArea.hidden = true;
   }
-  const warningWidth = document.querySelector(".warningWidth");
+  const warningWidth: any = document.querySelector(".warningWidth")!;
   if (width > 16) {
     warningWidth.hidden = false;
   } else {
@@ -110,7 +110,7 @@ function handleDimensionsChange(event) {
   }
 }
 
-function updateBombCount(event) {
+function updateBombCount(event: any) {
   const EASY_SPAN = '<span class="green">(easy)</span>';
   const MED_SPAN = '<span class="blue">(medium)</span>';
   const HARD_SPAN = '<span class="red">(hard)</span>';
@@ -129,6 +129,6 @@ function updateBombCount(event) {
   } else {
     msg = EASY_SPAN;
   }
-  const bombNumberTag = document.getElementById("bombNumber");
+  const bombNumberTag = document.getElementById("bombNumber")!;
   bombNumberTag.innerHTML = bombCount + msg;
 }

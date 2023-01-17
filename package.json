@@ -1,0 +1,16 @@
+{
+  "name": "minesweeper-clone",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:nicholas1301/minesweeper-clone.git",
+  "author": "nicholas <nicholas.ge1301@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "live-server --open=./index.html",
+    "build": "yarn tsc -p ."
+  },
+  "dependencies": {
+    "live-server": "^1.2.2",
+    "typescript": "^4.9.4"
+  }
+}

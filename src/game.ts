@@ -1,13 +1,21 @@
 export default class Game {
-  constructor(width, height, bombs) {
+
+  width: number;
+  height: number;
+  bombs: number;
+  flags: number;
+  board: string[][]; // Board;
+  answer: string[][] | undefined;
+
+  constructor(width: number, height: number, bombs: number) {
     this.width = width;
     this.height = height;
     this.board = Game.makeNewBoard(width, height);
     this.flags = 0;
-    this.bombs = bombs;
+    this.bombs = bombs; 
   }
 
-  static makeNewBoard(width, height) {
+  static makeNewBoard(width: number, height: number) {
     const board = [];
     for (let i = 0; i < height; i++) {
       let row = [];
@@ -20,7 +28,7 @@ export default class Game {
   }
 
   renderGrid(gameOn = true) {
-    const grid = document.querySelector(".board");
+    const grid: any = document.querySelector(".board")!;
     grid.innerHTML = "";
     grid.style.gridTemplateColumns = `repeat(${this.width}, 1fr)`;
 
@@ -86,7 +94,7 @@ export default class Game {
     }
   }
 
-  static createAnswerBoard(numBombs, width, height, clickCoords) {
+  static createAnswerBoard(numBombs: number, width: number, height: number, clickCoords: [number, number]) {
     const [clickX, clickY] = clickCoords;
     const adjacent = [
       [clickX - 1, clickY - 1],
@@ -117,7 +125,7 @@ export default class Game {
     return answerBoard;
   }
 
-  static populateNumbers(board) {
+  static populateNumbers(board: string[][]/* Board */) {
     const height = board.length;
     const width = board[0].length;
     for (let row = 0; row < height; row++) {
@@ -130,7 +138,7 @@ export default class Game {
     return board;
   }
 
-  static getAdjacentBombs(row, col, board) {
+  static getAdjacentBombs(row: number, col: number, board: string[][]) {
     const adjacentSquares = [
       board[row - 1]?.[col - 1],
       board[row - 1]?.[col],
@@ -144,7 +152,7 @@ export default class Game {
     return adjacentSquares.filter((square) => square === "x").length;
   }
 
-  toggleFlag(event) {
+  toggleFlag(event: any) {
     event.preventDefault();
     const coords = event.target.id.split("-");
     const x = +coords[0];
@@ -163,21 +171,21 @@ export default class Game {
     }
     this.renderGrid(!win);
     if (win)
-      document.querySelector(".victory-msg-container").style.display = "block";
+      (document.querySelector(".victory-msg-container")! as any).style.display = "block";
   }
 
   checkVictory() {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) {
-        if (this.answer[i][j] !== "x" && this.board[i][j] !== this.answer[i][j])
+        if (this.answer![i][j] !== "x" && this.board[i][j] !== this.answer![i][j])
           return false;
-        if (this.answer[i][j] === "x" && this.board[i][j] !== "f") return false;
+        if (this.answer![i][j] === "x" && this.board[i][j] !== "f") return false;
       }
     }
     return true;
   }
 
-  guess(event) {
+  guess(event: any) {
     const coords = event.target.id.split("-");
     const x = +coords[0];
     const y = +coords[1];
@@ -201,23 +209,23 @@ export default class Game {
     }
     this.renderGrid(!win);
     if (win)
-      document.querySelector(".victory-msg-container").style.display = "block";
+      (document.querySelector(".victory-msg-container") as any).style.display = "block";
   }
 
-  gameOver(event) {
+  gameOver(event: any) {
     this.showAllBombs();
     const coords = event.target.id.split("-");
     const x = +coords[0];
     const y = +coords[1];
     this.board[x][y] = "X";
     this.renderGrid(false);
-    document.querySelector(".defeat-msg-container").style.display = "block";
+    (document.querySelector(".defeat-msg-container")! as any).style.display = "block";
   }
 
   showAllBombs() {
     for (let i = 0; i < this.height; i++) {
       for (let j = 0; j < this.width; j++) {
-        if (this.answer[i][j] === "x" && this.board[i][j] !== "f")
+        if (this.answer![i][j] === "x" && this.board[i][j] !== "f")
           this.board[i][j] = "x";
       }
     }
@@ -234,14 +242,15 @@ export default class Game {
   //   [row + 1, col + 1],
   // ];
   // candidates.forEach((coords) => this.open(...coords));
-  open(row, col) {
-    if (this.answer[row][col] === "0") {
+  open(row: number, col: number) {
+    if (this.answer![row][col] === "0") {
       // breadth first search
-      const queue = [];
-      queue.push([row, col]);
+      const queue: Array<[number, number]> = [[row, col]];
       while (queue.length > 0) {
-        const [nextRow, nextCol] = queue.shift();
-        this.board[nextRow][nextCol] = this.answer[nextRow][nextCol];
+
+        const  [nextRow, nextCol] = queue.shift()!;
+
+        this.board[nextRow][nextCol] = this.answer![nextRow][nextCol];
         if (this.board[nextRow][nextCol] !== "0") continue;
         const candidates = [
           [nextRow - 1, nextCol - 1],
@@ -268,13 +277,13 @@ export default class Game {
         }
       }
     } else {
-      this.board[row][col] = this.answer[row][col];
+      this.board[row][col] = this.answer![row][col];
     }
   }
 
-  openAdjacent(event) {
+  openAdjacent(event: any) {
     const num = +event.target.innerText;
-    const [x, y] = event.target.id.split("-").map((x) => +x);
+    const [x, y] = event.target.id.split("-").map((x: string) => +x);
     // verify if the number of adjacent flags is equal to num
     const adjacentCoords = [
       [x - 1, y - 1],
@@ -294,46 +303,46 @@ export default class Game {
         ([row, col]) => this.board[row]?.[col] === "o"
       );
       coordsToClick.forEach(([row, col]) =>
-        document.getElementById(row + "-" + col).click()
+        document.getElementById(row + "-" + col)!.click()
       );
     }
   }
 
   // recursively calling click: exceeds maximum call stack size but is somehow working??
-  openAllAdjacent(row, col) {
+  openAllAdjacent(row: number, col: number) {
     const prevRow = this.board[row - 1];
     const nextRow = this.board[row + 1];
     const prevCol = this.board[row][col - 1];
     const nextCol = this.board[row][col + 1];
 
     if (prevCol !== undefined && this.board[row][col - 1] === "o") {
-      document.getElementById(`${row}-${col - 1}`).click();
+      (document.getElementById(`${row}-${col - 1}`)! as any).click();
     }
     if (nextCol !== undefined && this.board[row][col + 1] === "o") {
-      document.getElementById(`${row}-${col + 1}`).click();
+      document.getElementById(`${row}-${col + 1}`)!.click();
     }
 
     if (prevRow !== undefined) {
       if (this.board[row - 1][col] === "o") {
-        document.getElementById(`${row - 1}-${col}`).click();
+        document.getElementById(`${row - 1}-${col}`)!.click();
       }
       if (prevCol !== undefined && this.board[row - 1][col - 1] === "o") {
-        document.getElementById(`${row - 1}-${col - 1}`).click();
+        document.getElementById(`${row - 1}-${col - 1}`)!.click();
       }
       if (nextCol !== undefined && this.board[row - 1][col + 1] === "o") {
-        document.getElementById(`${row - 1}-${col + 1}`).click();
+        document.getElementById(`${row - 1}-${col + 1}`)!.click();
       }
     }
 
     if (nextRow !== undefined) {
       if (this.board[row + 1][col] === "o") {
-        document.getElementById(`${row + 1}-${col}`).click();
+        document.getElementById(`${row + 1}-${col}`)!.click();
       }
       if (prevCol !== undefined && this.board[row + 1][col - 1] === "o") {
-        document.getElementById(`${row + 1}-${col - 1}`).click();
+        document.getElementById(`${row + 1}-${col - 1}`)!.click();
       }
       if (nextCol !== undefined && this.board[row + 1][col + 1] === "o") {
-        document.getElementById(`${row + 1}-${col + 1}`).click();
+        document.getElementById(`${row + 1}-${col + 1}`)!.click();
       }
     }
   }
